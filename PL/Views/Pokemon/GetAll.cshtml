@@ -1,0 +1,125 @@
+﻿@model ML.Pokemon
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="text-white">
+                <h2>Lista de Pokemon</h2>
+                <p>Lista de todos los Pokemon</p>
+                <hr>
+            </div>
+
+            <div class="row">
+                <div class="input-group mb-3">
+                    <input id="myFilter" onkeyup="buscarPikachu()" type="text" class="form-control" placeholder="Buscar un pokemon por nombre o id" aria-label="Buscar un pokemon por nombre o id" aria-describedby="button-addon2">
+                </div>
+            </div>
+
+            @if (Model.Pokemons != null)
+            {
+                <div id="pokemons" class="align-content-center">
+                    <div class="row">
+                        @foreach (ML.Pokemon pokemon in Model.Pokemons)
+                        {
+                            <div class="col-md-2" style="margin-bottom: 1.5rem;">
+                                <div class="card">
+                                    <img src="@pokemon.Image" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@pokemon.Id</h5>
+                                        <hr>
+                                        <p class="card-text">@pokemon.Nombre</p>
+                                        <a href="@Url.Action("GetById", "Pokemon", new{ id = @pokemon.Id})" , class="btn btn-primary  stretched-link">Ver mas</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-primary" role="alert">
+                    No se encontro ningun pokemon
+                </div>
+            }
+
+
+            @*<nav aria-label="Page navigation example">
+        <ul class="pagination">
+        @if (Model.Previus != null)
+        {
+        <li class="page-item">
+        <a class="page-link btn btn-outline-light" href="@Url.Action("GetAll", "Pokemon", new { pag = Model.Previus })">Anterior</a>
+        </li>
+        }
+
+        @if (Model.Next != null)
+        {
+        <li class="page-item">
+        <a class="page-link" href="@Url.Action("GetAll", "Pokemon", new { pag = Model.Next })">Siguiente</a>
+        </li>
+        }
+        </ul>
+        </nav>*@
+
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    @if (Model.Previus != null)
+                    {
+                        <li class="page-item">
+                            <a class="page-link bg-info" href="@Url.Action("GetAll", "Pokemon", new { pag = Model.Previus })">Previous</a>
+                        </li>
+                    }
+                    @if (Model.Next != null)
+                    {
+                        <li class="page-item">
+                            <a class="page-link bg-success" href="@Url.Action("GetAll", "Pokemon", new { pag = Model.Previus })">Next</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+}
+
+<script>
+    function buscarPikachu() {
+        var input, filter, cards, cardContainer, h5, title, i;
+        input = document.getElementById('myFilter');
+        filter = input.value.toUpperCase();
+        cardContainer = document.getElementById("pokemons");
+        cards = cardContainer.getElementsByClassName("card");
+        Object.keys(cards).forEach((i) => {
+            cards[i].textContent.toUpperCase().includes(filter)
+                ? (cards[i].style.display = '')
+                : (cards[i].style.display = 'none');
+        });
+    }
+
+    function ShowModal() {
+        $('#modalFormulario').modal('show')
+        Vaciar();
+    }
+
+    function GetById(Id) {
+        $.ajax({
+            url: "/Pokemon/GetById/" + Id,
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $("#imgPokemon").val(result.Object.Id);
+
+                $('#modalFormulario').modal('show');
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+</script>
