@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Globalization;
 
 namespace PL.Controllers
 {
@@ -53,6 +54,7 @@ namespace PL.Controllers
                             ML.Pokemon listPokemon = new ML.Pokemon();
 
                             listPokemon.Nombre = item.name;
+                            listPokemon.Nombre = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(listPokemon.Nombre);
                             listPokemon.URL = item.url;
                             listPokemon.Id = GetId(listPokemon.URL);
                             listPokemon.Image = image + listPokemon.Id + ".png";

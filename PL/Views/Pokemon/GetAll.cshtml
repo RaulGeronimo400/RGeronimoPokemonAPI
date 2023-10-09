@@ -27,10 +27,10 @@
                                 <div class="card">
                                     <img src="@pokemon.Image" class="card-img-top" alt="...">
                                     <div class="card-body">
-                                        <h5 class="card-title">@pokemon.Id</h5>
+                                        <h5 class="card-title">@pokemon.Id.ToString("0000")</h5>
                                         <hr>
                                         <p class="card-text">@pokemon.Nombre</p>
-                                        <a href="@Url.Action("GetById", "Pokemon", new{ id = @pokemon.Id})" , class="btn btn-primary  stretched-link">Ver mas</a>
+                                        <a href="@Url.Action("GetById", "Pokemon", new{ id = @pokemon.Id})" , class="stretched-link"></a>
                                     </div>
                                 </div>
                             </div>
@@ -45,38 +45,18 @@
                 </div>
             }
 
-
-            @*<nav aria-label="Page navigation example">
-        <ul class="pagination">
-        @if (Model.Previus != null)
-        {
-        <li class="page-item">
-        <a class="page-link btn btn-outline-light" href="@Url.Action("GetAll", "Pokemon", new { pag = Model.Previus })">Anterior</a>
-        </li>
-        }
-
-        @if (Model.Next != null)
-        {
-        <li class="page-item">
-        <a class="page-link" href="@Url.Action("GetAll", "Pokemon", new { pag = Model.Next })">Siguiente</a>
-        </li>
-        }
-        </ul>
-        </nav>*@
-
-
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     @if (Model.Previus != null)
                     {
                         <li class="page-item">
-                            <a class="page-link bg-info" href="@Url.Action("GetAll", "Pokemon", new { pag = Model.Previus })">Previous</a>
+                            <a class="page-link bg-info" href="@Url.Action("GetAll", "Pokemon", new { pag = Model.Previus })">Anterior</a>
                         </li>
                     }
                     @if (Model.Next != null)
                     {
                         <li class="page-item">
-                            <a class="page-link bg-success" href="@Url.Action("GetAll", "Pokemon", new { pag = Model.Previus })">Next</a>
+                            <a class="page-link bg-success" href="@Url.Action("GetAll", "Pokemon", new { pag = Model.Next })">Siguiente</a>
                         </li>
                     }
                 </ul>
@@ -87,39 +67,42 @@
 }
 
 <script>
-    function buscarPikachu() {
-        var input, filter, cards, cardContainer, h5, title, i;
-        input = document.getElementById('myFilter');
-        filter = input.value.toUpperCase();
-        cardContainer = document.getElementById("pokemons");
-        cards = cardContainer.getElementsByClassName("card");
-        Object.keys(cards).forEach((i) => {
-            cards[i].textContent.toUpperCase().includes(filter)
-                ? (cards[i].style.display = '')
-                : (cards[i].style.display = 'none');
-        });
+        function buscarPikachu() {
+            var input, filter, cards, cardContainer, h5, title, i;
+            input = document.getElementById('myFilter');
+            filter = input.value.toUpperCase();
+            cardContainer = document.getElementById("pokemons");
+            cards = cardContainer.getElementsByClassName("card");
+            Object.keys(cards).forEach((i) => {
+                cards[i].textContent.toUpperCase().includes(filter)
+                    ? (cards[i].style.display = '')
+                    : (cards[i].style.display = 'none');
+            });
+        }
+
+        function ShowModal() {
+            $('#modalFormulario').modal('show')
+            Vaciar();
+        }
+
+        function GetById(Id) {
+            $.ajax({
+                url: "/Pokemon/GetById/" + Id,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $("#imgPokemon").val(result.Object.Id);
+
+                    $('#modalFormulario').modal('show');
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+        function capitalizarPrimeraLetra(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
     }
-
-    function ShowModal() {
-        $('#modalFormulario').modal('show')
-        Vaciar();
-    }
-
-    function GetById(Id) {
-        $.ajax({
-            url: "/Pokemon/GetById/" + Id,
-            type: "GET",
-            contentType: "application/json;charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                $("#imgPokemon").val(result.Object.Id);
-
-                $('#modalFormulario').modal('show');
-            },
-            error: function (errormessage) {
-                alert(errormessage.responseText);
-            }
-        });
-    }
-
 </script>
