@@ -8,6 +8,7 @@
             <div class="text-white">
                 <h2>Lista de Pokemon</h2>
                 <p>Lista de todos los Pokemon</p>
+
                 <hr>
             </div>
 
@@ -25,12 +26,20 @@
                         {
                             <div class="col-md-2" style="margin-bottom: 1.5rem;">
                                 <div class="card">
-                                    <img src="@pokemon.Image" class="card-img-top" alt="...">
+                                    <a href="@Url.Action("GetById", "Pokemon", new{ id = @pokemon.Id})">
+                                        <img src="@pokemon.Image" class="card-img-top" alt="...">
+                                    </a>
                                     <div class="card-body">
                                         <h5 class="card-title">@pokemon.Id.ToString("0000")</h5>
                                         <hr>
                                         <p class="card-text">@pokemon.Nombre</p>
-                                        <a href="@Url.Action("GetById", "Pokemon", new{ id = @pokemon.Id})" , class="stretched-link"></a>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            @foreach (ML.Pokemon tipo in pokemon.Detalles.Tipo.Tipos)
+                                            {
+                                                <a href="@Url.Action("GetAll", "Pokemon", new { pag = "type/" + @tipo.Detalles.Tipo.Id })" class="btn btn-sm @tipo.Detalles.Tipo.Nombre">@tipo.Detalles.Tipo.Nombre</a>
+                                            }
+                                        </div>
+                                        @*<a href="@Url.Action("GetById", "Pokemon", new{ id = @pokemon.Id})" , class="stretched-link"></a>*@
                                     </div>
                                 </div>
                             </div>
@@ -72,33 +81,11 @@
             input = document.getElementById('myFilter');
             filter = input.value.toUpperCase();
             cardContainer = document.getElementById("pokemons");
-            cards = cardContainer.getElementsByClassName("card");
+            cards = cardContainer.getElementsByClassName("col-md-2");
             Object.keys(cards).forEach((i) => {
                 cards[i].textContent.toUpperCase().includes(filter)
                     ? (cards[i].style.display = '')
                     : (cards[i].style.display = 'none');
-            });
-        }
-
-        function ShowModal() {
-            $('#modalFormulario').modal('show')
-            Vaciar();
-        }
-
-        function GetById(Id) {
-            $.ajax({
-                url: "/Pokemon/GetById/" + Id,
-                type: "GET",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (result) {
-                    $("#imgPokemon").val(result.Object.Id);
-
-                    $('#modalFormulario').modal('show');
-                },
-                error: function (errormessage) {
-                    alert(errormessage.responseText);
-                }
             });
         }
 

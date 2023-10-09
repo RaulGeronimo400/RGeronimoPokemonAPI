@@ -37,11 +37,40 @@ namespace PL.Controllers
                         foreach (var item in json.pokemon)
                         {
                             ML.Pokemon listPokemon = new ML.Pokemon();
+                            listPokemon.Detalles = new ML.Detalles();
+                            listPokemon.Detalles.Tipo = new ML.Tipo();
 
                             listPokemon.Nombre = item.pokemon.name;
+                            listPokemon.Nombre = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(listPokemon.Nombre);
                             listPokemon.URL = item.pokemon.url;
                             listPokemon.Id = GetId(listPokemon.URL);
                             listPokemon.Image = image + listPokemon.Id + ".png";
+
+                            //Tipo
+                            var responseTaskTipo = client.GetAsync("pokemon/" + listPokemon.Id);
+                            responseTaskTipo.Wait();
+                            var resultT = responseTaskTipo.Result;
+
+                            var readTaskTipo = resultT.Content.ReadAsStringAsync();
+                            dynamic jsonTipo = JObject.Parse(readTaskTipo.Result.ToString());
+
+                            ML.Result resultTipo = new ML.Result();
+                            resultTipo.results = new List<object>();
+
+                            foreach (var itemTipo in jsonTipo.types)
+                            {
+                                ML.Pokemon pokemonitem = new ML.Pokemon();
+                                pokemonitem.Detalles = new ML.Detalles();
+                                pokemonitem.Detalles.Tipo = new ML.Tipo();
+
+                                pokemonitem.Detalles.Tipo.Nombre = itemTipo.type.name;
+                                pokemonitem.Detalles.Tipo.url = itemTipo.type.url;
+                                pokemonitem.Detalles.Tipo.Id = GetIdTipo(pokemonitem.Detalles.Tipo.url);
+
+                                resultTipo.results.Add(pokemonitem);
+                            }
+                            listPokemon.Detalles.Tipo.Tipos = resultTipo.results;
+                            //Tipo
 
                             pokemon.Pokemons.Add(listPokemon);
                         }
@@ -52,6 +81,8 @@ namespace PL.Controllers
                         foreach (var item in json.results)
                         {
                             ML.Pokemon listPokemon = new ML.Pokemon();
+                            listPokemon.Detalles = new ML.Detalles();
+                            listPokemon.Detalles.Tipo = new ML.Tipo();
 
                             listPokemon.Nombre = item.name;
                             listPokemon.Nombre = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(listPokemon.Nombre);
@@ -59,6 +90,32 @@ namespace PL.Controllers
                             listPokemon.Id = GetId(listPokemon.URL);
                             listPokemon.Image = image + listPokemon.Id + ".png";
 
+                            //Tipo
+                            var responseTaskTipo = client.GetAsync("pokemon/" + listPokemon.Id);
+                            responseTaskTipo.Wait();
+                            var resultT = responseTaskTipo.Result;
+
+                            var readTaskTipo = resultT.Content.ReadAsStringAsync();
+                            dynamic jsonTipo = JObject.Parse(readTaskTipo.Result.ToString());
+
+                            ML.Result resultTipo = new ML.Result();
+                            resultTipo.results = new List<object>();
+
+                            foreach (var itemTipo in jsonTipo.types)
+                            {
+                                ML.Pokemon pokemonitem = new ML.Pokemon();
+                                pokemonitem.Detalles = new ML.Detalles();
+                                pokemonitem.Detalles.Tipo = new ML.Tipo();
+
+                                pokemonitem.Detalles.Tipo.Nombre = itemTipo.type.name;
+                                pokemonitem.Detalles.Tipo.url = itemTipo.type.url;
+                                pokemonitem.Detalles.Tipo.Id = GetIdTipo(pokemonitem.Detalles.Tipo.url);
+
+                                resultTipo.results.Add(pokemonitem);
+                            }
+                            listPokemon.Detalles.Tipo.Tipos = resultTipo.results;
+
+                            //
                             pokemon.Pokemons.Add(listPokemon);
                         }
                     }
@@ -96,6 +153,8 @@ namespace PL.Controllers
 
                     pokemon.Id = json.id;
                     pokemon.Nombre = json.name;
+                    pokemon.Nombre = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(pokemon.Nombre);
+
                     pokemon.Image = image + pokemon.Id + ".png";
 
                     //Detalles
