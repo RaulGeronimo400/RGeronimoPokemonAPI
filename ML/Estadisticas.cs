@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ML
 {
-    public class Habilidad
+    public class Estadistica
     {
         public string Name { get; set; }
         public int Value { get; set; }
-        public List<object> Habilidades { get; set; }
+        public List<object> Estadisticas { get; set; }
     }
 }

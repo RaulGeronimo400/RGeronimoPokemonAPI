@@ -132,12 +132,16 @@ namespace PL.Controllers
             ML.Result resultHabilidades = new ML.Result();
             resultHabilidades.results = new List<object>();
 
+            ML.Result resultMovimientos = new ML.Result();
+            resultMovimientos.results = new List<object>();
+
             ML.Pokemon pokemon = new ML.Pokemon();
             pokemon.Pokemons = new List<object>();
 
             pokemon.Detalles = new ML.Detalles();
             pokemon.Detalles.Tipo = new ML.Tipo();
-            pokemon.Detalles.Habilidades = new ML.Habilidad();
+            pokemon.Detalles.Estadistica = new ML.Estadistica();
+            pokemon.Detalles.Habilidad = new ML.Habilidad();
 
             using (var client = new HttpClient())
             {
@@ -178,19 +182,32 @@ namespace PL.Controllers
                     }
                     pokemon.Detalles.Tipo.Tipos = resultTipo.results;
 
-                    //Habilidades
+                    //Estadisticas
                     foreach (var item in json.stats)
                     {
                         ML.Pokemon pokemonItemStatus = new ML.Pokemon();
                         pokemonItemStatus.Detalles = new ML.Detalles();
-                        pokemonItemStatus.Detalles.Habilidades = new ML.Habilidad();
+                        pokemonItemStatus.Detalles.Estadistica = new ML.Estadistica();
 
-                        pokemonItemStatus.Detalles.Habilidades.Name = item.stat.name;
-                        pokemonItemStatus.Detalles.Habilidades.Value = item.base_stat;
+                        pokemonItemStatus.Detalles.Estadistica.Name = item.stat.name;
+                        pokemonItemStatus.Detalles.Estadistica.Value = item.base_stat;
 
                         resultHabilidades.results.Add(pokemonItemStatus);
                     }
-                    pokemon.Detalles.Habilidades.Habilidades = resultHabilidades.results;
+                    pokemon.Detalles.Estadistica.Estadisticas = resultHabilidades.results;
+
+                    //Habilidades
+                    foreach (var item in json.abilities)
+                    {
+                        ML.Pokemon pokemonItemHabilidades = new ML.Pokemon();
+                        pokemonItemHabilidades.Detalles = new ML.Detalles();
+                        pokemonItemHabilidades.Detalles.Habilidad = new ML.Habilidad();
+
+                        pokemonItemHabilidades.Detalles.Habilidad.name = item.ability.name;
+
+                        resultMovimientos.results.Add(pokemonItemHabilidades);
+                    }
+                    pokemon.Detalles.Habilidad.Habilidades = resultMovimientos.results;
                 }
             }
             return View(pokemon);

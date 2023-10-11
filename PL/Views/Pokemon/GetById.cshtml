@@ -21,6 +21,13 @@
                                 <p class="card-text text-justify">Altura: @Model.Detalles.Tamaño m</p>
                                 <p class="card-text text-justify">Peso: @Model.Detalles.Peso Kg</p>
                                 <p class="card-text"><small class="text-muted">Habilidades</small></p>
+                                <ol class="list-group list-group-numbered">
+                                @foreach (ML.Pokemon pokemon in Model.Detalles.Habilidad.Habilidades)
+                                    {
+                                    <li class="list-group-item">@pokemon.Detalles.Habilidad.name</li>
+                                    }
+                                </ol>
+                                <br /><p class="card-text"><small class="text-muted">Tipo</small></p>
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     @foreach (ML.Pokemon pokemon in Model.Detalles.Tipo.Tipos)
                                     {
@@ -33,9 +40,9 @@
                         <div class="col-md-4">
                             <div class="card-body">
                                 <h5 class="card-title">Estadisticas de las Habilidades</h5>
-                                @foreach (ML.Pokemon pokemon in Model.Detalles.Habilidades.Habilidades)
+                                @foreach (ML.Pokemon pokemon in Model.Detalles.Estadistica.Estadisticas)
                                 {
-                                    <p class="card-text text-justify">@pokemon.Detalles.Habilidades.Name: @pokemon.Detalles.Habilidades.Value</p>
+                                    <p class="card-text text-justify">@pokemon.Detalles.Estadistica.Name: @pokemon.Detalles.Estadistica.Value</p>
                                 }
                             </div>
 

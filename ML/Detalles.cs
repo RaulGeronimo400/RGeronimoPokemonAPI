@@ -10,7 +10,8 @@ namespace ML
     {
         public double Tamaño { get; set; }
         public double Peso { get; set; }
-        public Habilidad Habilidades { get; set; }
+        public Estadistica Estadistica { get; set; }
         public Tipo Tipo { get; set; }
+        public Habilidad Habilidad { get; set; }
     }
 }
